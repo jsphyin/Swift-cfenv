@@ -17,46 +17,46 @@
 import Foundation
 
 public struct DateUtils {
-
-  let dateFormatter: NSDateFormatter
-
-  public init() {
-    dateFormatter = NSDateFormatter()
-    // Example: 2016-03-04 02:43:07 +0000
-    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
-    let timeZone = NSTimeZone(name: "UTC")
-    dateFormatter.timeZone = timeZone
-  }
-
-  /**
-  * Converts to a NSDate object a string that comforms to the following
-  * format yyyy-MM-dd HH:mm:ss ZZZ.
-  */
-  public func convertStringToNSDate(dateString: String?) -> NSDate? {
-    guard let dateStr = dateString else {
-      return nil
+    
+    let dateFormatter: DateFormatter
+    
+    public init() {
+        dateFormatter = DateFormatter()
+        // Example: 2016-03-04 02:43:07 +0000
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        let timeZone = TimeZone(abbreviation: "UTC")
+        dateFormatter.timeZone = timeZone
     }
-
-    let nsDate: NSDate?
-    #if os(Linux)
-      nsDate = dateFormatter.dateFromString(dateStr)
-    #else
-      nsDate = dateFormatter.date(from: dateStr)
-    #endif
-
-    return nsDate
-  }
-
-  /**
-  * Converts a NSDate object to a string that follows the following format:
-  * yyyy-MM-dd HH:mm:ss ZZZ.
-  */
-  public func convertNSDateToString(nsDate: NSDate?) -> String? {
-    guard let nsDateObj = nsDate else {
-      return nil
+    
+    /**
+     * Converts to a NSDate object a string that comforms to the following
+     * format yyyy-MM-dd HH:mm:ss ZZZ.
+     */
+    public func convertStringToDate(dateString: String?) -> Date? {
+        guard let dateStr = dateString else {
+            return nil
+        }
+        
+        let resultDate: Date?
+        #if os(Linux)
+            resultDate = dateFormatter.dateFromString(dateStr)
+        #else
+            resultDate = dateFormatter.date(from: dateStr)
+        #endif
+        
+        return resultDate
     }
-    let dateString: String? = dateFormatter.string(from: nsDateObj)
-    return dateString
-  }
-
+    
+    /**
+     * Converts a NSDate object to a string that follows the following format:
+     * yyyy-MM-dd HH:mm:ss ZZZ.
+     */
+    public func convertNSDateToString(withDate: Date?) -> String? {
+        guard let dateObj = withDate else {
+            return nil
+        }
+        let dateString: String? = dateFormatter.string(from: dateObj)
+        return dateString
+    }
+    
 }

@@ -32,8 +32,8 @@ public struct AppEnv {
   * The vcap option property is ignored if not running locally.
   */
   public init(options: JSON) throws {
-    // NSProcessInfo.processInfo().environment returns [String : String]
-    let environmentVars = NSProcessInfo.processInfo().environment
+    // ProcessInfo.processInfo().environment returns [String : String]
+    let environmentVars = ProcessInfo.processInfo.environment
     let vcapApplication = environmentVars["VCAP_APPLICATION"]
     isLocal = (vcapApplication == nil)
 
@@ -85,7 +85,7 @@ public struct AppEnv {
       let instanceId = app["instance_id"].string,
       let instanceIndex = app["instance_index"].int,
       let port = app["port"].int,
-      let startedAt: NSDate = dateUtils.convertStringToNSDate(dateString: app["started_at"].string),
+      let startedAt: Date = dateUtils.convertStringToDate(dateString: app["started_at"].string),
       let spaceId = app["space_id"].string else {
         return nil
       }
@@ -134,7 +134,7 @@ public struct AppEnv {
     }
 
     do {
-      let regex = try NSRegularExpression(pattern: spec, options: NSRegularExpressionOptions.caseInsensitive)
+      let regex = try NSRegularExpression(pattern: spec, options: NSRegularExpression.Options.caseInsensitive)
       for (name, serv) in services {
         let numberOfMatches = regex.numberOfMatches(in: name, options: [], range: NSMakeRange(0, name.characters.count))
         if numberOfMatches > 0 {
@@ -196,10 +196,10 @@ public struct AppEnv {
       parsedURL.query = query
     }
     if let queryItems = substitutions["queryItems"].array {
-      var urlQueryItems: [NSURLQueryItem] = []
+      var urlQueryItems: [URLQueryItem] = []
       for queryItem in queryItems {
         if let name = queryItem["name"].string {
-          let urlQueryItem = NSURLQueryItem(name: name, value: queryItem["value"].string)
+          let urlQueryItem = URLQueryItem(name: name, value: queryItem["value"].string)
           urlQueryItems.append(urlQueryItem)
         }
       }
